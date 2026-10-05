@@ -13,32 +13,147 @@
   <link rel="icon" href="assets/lynx-icon.jpg">
   <link rel="apple-touch-icon" href="assets/lynx-icon.jpg">
   <title>Lynx — ZKas wallet</title>
-  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/app.css?v=2">
 </head>
 <body>
   <main class="app">
-    <header class="hero">
-      <img class="mark" src="assets/lynx-icon.jpg" alt="Lynx">
-      <p class="tag">Private · Fast</p>
-      <h1><span>Lynx</span></h1>
-      <p class="tag">Wallet for ZKas</p>
-    </header>
+    <section id="screen-welcome" class="screen">
+      <header class="hero">
+        <img class="mark" src="assets/lynx-icon.jpg" alt="Lynx">
+        <p class="tag">Private · Fast</p>
+        <h1><span>Lynx</span></h1>
+        <p class="tag">Wallet for ZKas</p>
+      </header>
 
-    <section class="card">
-      <h2>Network</h2>
-      <p>Shielded-by-default BlockDAG. Orchard + Halo 2. One-second target. Keys stay on this device.</p>
-      <div class="row">
-        <img class="zkas" src="assets/zkas-official.png" alt="Official ZKas logo">
-        <div class="credit">Settles on <b>ZKas</b> · ticker <b>ZKAS</b><br>Official mark used as-is.</div>
+      <div class="card">
+        <h2>Network</h2>
+        <p>Shielded-by-default BlockDAG. Orchard + Halo 2. One-second target. Keys stay on this device.</p>
+        <div class="row">
+          <img class="zkas" src="assets/zkas-official.png" alt="Official ZKas logo">
+          <div class="credit">Settles on <b>ZKas</b> · ticker <b>ZKAS</b><br>Official mark used as-is.</div>
+        </div>
+      </div>
+
+      <div class="btns">
+        <button class="primary" type="button" id="create" disabled>Create wallet</button>
+        <button class="ghost" type="button" id="import" disabled>Import phrase or key</button>
+      </div>
+      <p class="note" id="welcome-note">Loading official ZKas signer…</p>
+    </section>
+
+    <section id="screen-import" class="screen hidden">
+      <header class="top">
+        <button class="back" type="button" data-back="screen-welcome">Back</button>
+        <h1>Import</h1>
+      </header>
+      <p class="lead">Paste a 64-character hex spending seed from Lynx or the official signer. A 12-word phrase is not in this WASM — it will be refused.</p>
+      <label class="field">
+        <span>Spending seed</span>
+        <textarea id="import-seed" rows="4" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="64 hex characters"></textarea>
+      </label>
+      <p class="err" id="import-err" hidden></p>
+      <p class="ok" id="import-preview" hidden></p>
+      <div class="btns">
+        <button class="primary" type="button" id="import-go">Derive address</button>
       </div>
     </section>
 
-    <div class="btns">
-      <button class="primary" type="button" id="create">Create wallet</button>
-      <button class="ghost" type="button" id="import">Import phrase or key</button>
-    </div>
-    <p class="note" id="note">Create and send wait for the official ZKas signer WASM. This screen will not invent a zkas: address.</p>
+    <section id="screen-backup" class="screen hidden">
+      <header class="top">
+        <h1>Save this seed</h1>
+      </header>
+      <p class="lead">This 32-byte seed is the wallet. Anyone who has it can spend. Lynx will encrypt it with your PIN after you confirm the copy.</p>
+      <div class="card">
+        <h2>Address</h2>
+        <p class="mono" id="backup-address"></p>
+        <button class="ghost tight" type="button" id="backup-copy-addr">Copy address</button>
+      </div>
+      <div class="card">
+        <h2>Spending seed</h2>
+        <p class="mono seed" id="backup-seed"></p>
+        <button class="ghost tight" type="button" id="backup-copy-seed">Copy seed</button>
+      </div>
+      <label class="check">
+        <input type="checkbox" id="backup-ok">
+        <span>I wrote this seed down. I understand Lynx cannot recover it.</span>
+      </label>
+      <p class="err" id="backup-err" hidden></p>
+      <div class="btns">
+        <button class="primary" type="button" id="backup-continue" disabled>Continue to PIN</button>
+      </div>
+    </section>
+
+    <section id="screen-pin" class="screen hidden">
+      <header class="top">
+        <button class="back" type="button" id="pin-back">Back</button>
+        <h1>Set a PIN</h1>
+      </header>
+      <p class="lead">Six to eight digits. The seed is encrypted with AES-GCM on this device. Lynx never sends it out.</p>
+      <label class="field">
+        <span>PIN</span>
+        <input id="pin-a" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="new-password">
+      </label>
+      <label class="field">
+        <span>Confirm PIN</span>
+        <input id="pin-b" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="new-password">
+      </label>
+      <p class="err" id="pin-err" hidden></p>
+      <div class="btns">
+        <button class="primary" type="button" id="pin-save">Lock wallet</button>
+      </div>
+    </section>
+
+    <section id="screen-unlock" class="screen hidden">
+      <header class="hero compact">
+        <img class="mark sm" src="assets/lynx-icon.jpg" alt="Lynx">
+        <h1><span>Lynx</span></h1>
+        <p class="mono dim" id="unlock-address"></p>
+      </header>
+      <label class="field">
+        <span>PIN</span>
+        <input id="unlock-pin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="current-password">
+      </label>
+      <p class="err" id="unlock-err" hidden></p>
+      <div class="btns">
+        <button class="primary" type="button" id="unlock-go">Unlock</button>
+        <button class="ghost" type="button" id="unlock-wipe">Remove wallet from this device</button>
+      </div>
+    </section>
+
+    <section id="screen-home" class="screen hidden">
+      <header class="home-head">
+        <img class="mark xs" src="assets/lynx-icon.jpg" alt="">
+        <div>
+          <p class="tag">Lynx · ZKas mainnet</p>
+          <p class="dim tiny">Keys on this device</p>
+        </div>
+        <button class="ghost tight" type="button" id="home-lock">Lock</button>
+      </header>
+      <div class="balance-wrap">
+        <p class="balance">0.00 <small>ZKAS</small></p>
+        <p class="dim tiny">Scan waits for walletd. Receive works now.</p>
+      </div>
+      <div class="card">
+        <h2>Your address</h2>
+        <p class="mono" id="home-address"></p>
+        <button class="ghost tight" type="button" id="home-copy">Copy address</button>
+      </div>
+      <div class="btns pair">
+        <button class="primary" type="button" id="home-receive">Receive</button>
+        <button class="ghost" type="button" id="home-send">Send</button>
+      </div>
+      <div class="btns">
+        <button class="ghost" type="button" id="home-seed">Show spending seed</button>
+        <button class="ghost danger" type="button" id="home-wipe">Remove wallet</button>
+      </div>
+      <div class="card hidden" id="home-seed-box">
+        <h2>Spending seed</h2>
+        <p class="mono seed" id="home-seed-text"></p>
+        <button class="ghost tight" type="button" id="home-copy-seed">Copy seed</button>
+      </div>
+      <p class="note" id="home-note"></p>
+    </section>
   </main>
-  <script type="module" src="js/app.js"></script>
+  <script type="module" src="js/app.js?v=2"></script>
 </body>
 </html>

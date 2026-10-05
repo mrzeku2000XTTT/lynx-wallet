@@ -44,7 +44,7 @@ Lynx does not wrap that EXE. Lynx is a phone/desktop PWA. The manager is an opti
 | Scan / prove | Hosted `walletd` **or** the user’s local Jack-Kane / `zkas-rusty` daemon. Daemon gets an **FVK**, never the seed. |
 | Official web wallet | https://wallet.zkas.info — same hybrid model we follow |
 
-Create / receive / send stay closed until the official signer WASM is pinned. This app will not invent a `zkas:` address.
+Create and import use the pinned official signer WASM in `vendor/zkas-signer/`. The address on screen is a real `zkas:` payment address from `new_wallet` / `address_from_seed`. The 32-byte seed is AES-GCM encrypted with your PIN in this browser. A 12-word phrase is refused: that WASM has no mnemonic export. Send still needs a daemon (`walletd`) to prepare the Orchard bundle; receive is the address you already hold.
 
 ## Trust
 

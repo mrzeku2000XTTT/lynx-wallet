@@ -20,6 +20,19 @@
       "headers": [
         { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate" }
       ]
+    },
+    {
+      "source": "/css/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/vendor/zkas-signer/(.*).wasm",
+      "headers": [
+        { "key": "Content-Type", "value": "application/wasm" },
+        { "key": "Cache-Control", "value": "public, max-age=86400" }
+      ]
     }
   ]
 }
