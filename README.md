@@ -55,7 +55,8 @@ Create / receive / send stay closed until the official signer WASM is pinned. Th
 ## Live
 
 - GitHub: https://github.com/mrzeku2000XTTT/lynx-wallet
-- Web app: https://lynx-wallet.vercel.app
+- Web app: https://mrzeku2000xttt.github.io/lynx-wallet/
+- Vercel: import that GitHub repo at https://vercel.com/new (project name `lynx-wallet`)
 
 Safari / Chrome → Share / Install → Add to Home Screen for the PWA.
 
