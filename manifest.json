@@ -1,0 +1,19 @@
+{
+  "name": "Lynx",
+  "short_name": "Lynx",
+  "description": "Lynx wallet for ZKas. Keys stay on this device.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#07100E",
+  "theme_color": "#07100E",
+  "icons": [
+    {
+      "src": "assets/lynx-icon.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any"
+    }
+  ]
+}
